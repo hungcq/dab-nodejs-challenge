@@ -1,0 +1,23 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "couchbase": "^3.1.1",
+    "express": "^4.17.1",
+    "kafkajs": "^1.12.0",
+    "log4js": "^6.2.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  }
+}
