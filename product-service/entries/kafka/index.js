@@ -2,9 +2,7 @@ const { Kafka } = require('kafkajs');
 const kafkaConfigs = require('../../configs/kafka-configs');
 const { logger } = require('../../utils');
 
-const config = kafkaConfigs;
-
-const kafka = new Kafka(config);
+const kafka = new Kafka(kafkaConfigs);
 
 const producer = kafka.producer();
 

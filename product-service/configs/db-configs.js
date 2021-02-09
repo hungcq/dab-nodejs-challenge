@@ -6,8 +6,9 @@ const dbConfigs = {
   password: env.pass,
   buckets: {
     products: 'products',
+    autoIds: 'auto-ids',
   },
-  productIdCounterKey: 'counter',
+  productIdCounterKey: 'product_counter',
   productKey: id => `product_${id}`,
 };
 

@@ -18,6 +18,8 @@
     "log4js": "^6.2.1"
   },
   "devDependencies": {
+    "chai": "^4.3.0",
+    "mocha": "^8.2.1",
     "prettier": "^2.2.1"
   }
 }

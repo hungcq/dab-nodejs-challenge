@@ -5,8 +5,9 @@ const kafkaConfigs = require('../configs/kafka-configs');
 const { logger } = require('../utils');
 
 const getProducts = async data => {
-  if (!data) {
-    return { error: 'Data is null.' };
+  const validationResult = validateGetInput(data);
+  if (!validationResult.success) {
+    return validationResult;
   }
   const { name, minPrice, maxPrice, type } = data;
   let extraQuery = '';
@@ -34,45 +35,34 @@ const getProducts = async data => {
   try {
     const result = await db.query(query, params);
     sendActionMsg('search', params);
-    return result.rows
-      .map(product => product[dbConfigs.buckets.products])
-      .filter(item => item.name !== undefined);
+    return result.rows.map(product => product[dbConfigs.buckets.products]);
   } catch (e) {
     logger.error(e);
     return [];
   }
 };
 
-const getProduct = async data => {
-  if (!data) {
-    return { error: 'Data is null.' };
-  }
-  const { id } = data;
+const getProduct = async id => {
   if (!id) {
     return { error: 'id is null.' };
   }
-  const product = await db.get(dbConfigs.productKey(id), dbConfigs.buckets.products);
+  const result = await db.get(dbConfigs.productKey(id), dbConfigs.buckets.products);
+  if (!result) {
+    return { error: 'product not exists.' };
+  }
   sendActionMsg('viewDetails', { id });
-  return product;
+  return result.content;
 };
 
 const addProduct = async data => {
-  if (!data) {
-    return { error: 'Data is null.' };
+  const validationResult = validateProductInput(data);
+  if (!validationResult.success) {
+    return validationResult;
   }
   const { name, price, type } = data;
-  if (!name) {
-    return { error: 'name is null.' };
-  }
-  if (!price) {
-    return { error: 'price is null.' };
-  }
-  if (!type) {
-    return { error: 'type is null.' };
-  }
   const { value: id } = await db.autoIncrement(
     dbConfigs.productIdCounterKey,
-    dbConfigs.buckets.products
+    dbConfigs.buckets.autoIds
   );
   const product = {
     id,
@@ -86,6 +76,53 @@ const addProduct = async data => {
   return product;
 };
 
+const validateGetInput = data => {
+  if (!data) {
+    return {
+      success: false,
+      error: 'Data is null.',
+    };
+  }
+  return {
+    success: true,
+  };
+};
+
+const validateProductInput = data => {
+  if (!data) {
+    return {
+      success: false,
+      error: 'Data is null.',
+    };
+  }
+  const { name, price, type } = data;
+  if (!name) {
+    return {
+      success: false,
+      error: 'name is null.',
+    };
+  }
+  if (!price) {
+    return {
+      success: false,
+      error: 'price is null.',
+    };
+  }
+  if (isNaN(price)) {
+    return {
+      success: false,
+      error: 'price must be a number.',
+    };
+  }
+  if (!type) {
+    return {
+      success: false,
+      error: 'type is null.',
+    };
+  }
+  return { success: true };
+};
+
 const sendActionMsg = async (type, data) => {
   const action = {
     timestamp: new Date().getTime(),
@@ -97,6 +134,8 @@ const sendActionMsg = async (type, data) => {
 };
 
 module.exports = {
+  validateGetInput,
+  validateProductInput,
   getProducts,
   getProduct,
   addProduct,

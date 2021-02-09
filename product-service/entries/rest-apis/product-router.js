@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  product.getProduct(req.query).then(result => res.json(result));
+  product.getProduct(req.params.id).then(result => res.json(result));
 });
 
 router.post('/', (req, res) => {

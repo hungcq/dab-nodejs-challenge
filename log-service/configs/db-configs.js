@@ -5,10 +5,11 @@ const dbConfigs = {
   username: 'dab',
   password: env.pass,
   buckets: {
-    products: 'products',
+    actions: 'actions',
+    autoIds: 'auto-ids'
   },
-  productIdCounterKey: 'counter',
-  productKey: id => `product_${id}`,
+  actionIdCounterKey: 'action_counter',
+  getActionKey: id => `action_${id}`,
 };
 
 module.exports = dbConfigs;
