@@ -44,7 +44,7 @@ on cloud:
 ### [Database entity diagram](https://images-1918.s3.ap-southeast-1.amazonaws.com/Entity%20Diagram.png)
 
 ### Software development patterns
-Ports-adapters Architecture
+[Ports-adapters Architecture](https://images-1918.s3.ap-southeast-1.amazonaws.com/hexagonal-arch-4-ports-adapters2.png)
 
 Each service is divided into 2 main parts:
 - /core: containing business logic
