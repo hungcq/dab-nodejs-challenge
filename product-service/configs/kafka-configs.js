@@ -1,6 +1,8 @@
+const env = require('./env');
+
 const kafkaConfigs = {
   clientId: 'product-service',
-  brokers: ['54.179.157.96:9092'],
+  brokers: [`${env.ip}:9092`],
   topic: {
     action: 'action',
   },

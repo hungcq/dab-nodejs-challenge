@@ -15,21 +15,25 @@ const getProducts = async data => {
     extraQuery += ' and contains(name,$name)';
   }
   if (minPrice) {
-    extraQuery += ' and price>=$minPrice';
+    extraQuery += ' and price > $minPrice';
   }
   if (maxPrice) {
-    extraQuery += ' and price<=$maxPrice';
+    extraQuery += ' and price < $maxPrice';
   }
   if (type) {
     extraQuery += ' and contains(type,$type)';
   }
+  if (extraQuery) {
+    extraQuery = extraQuery.substring(4, extraQuery.length);
+  }
   const query = `select * from ${dbConfigs.buckets.products} ${
     extraQuery ? 'where' : ''
   } ${extraQuery}`;
+  logger.info(query);
   const params = {
     name,
-    minPrice,
-    maxPrice,
+    minPrice: parseInt(minPrice),
+    maxPrice: parseInt(maxPrice),
     type,
   };
   try {
@@ -81,6 +85,18 @@ const validateGetInput = data => {
     return {
       success: false,
       error: 'Data is null.',
+    };
+  }
+  if (data.minPrice && isNaN(parseInt(data.minPrice))) {
+    return {
+      success: false,
+      error: 'minPrice must be a number',
+    };
+  }
+  if (data.maxPrice && isNaN(parseInt(data.maxPrice))) {
+    return {
+      success: false,
+      error: 'maxPrice must be a number',
     };
   }
   return {
